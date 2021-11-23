@@ -9,8 +9,9 @@ http://deepx.ucsd.edu/public/jmcauley/renttherunway/renttherunway_final_data.jso
 
 
 Sources:
+
 Decomposing fit semantics for product size recommendation in metric spaces
-
+<br>
 Rishabh Misra, Mengting Wan, Julian McAuley
-
+<br>
 RecSys, 2018
