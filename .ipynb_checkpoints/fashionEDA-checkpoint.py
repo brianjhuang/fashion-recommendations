@@ -22,6 +22,9 @@ class fashionCleaner:
         self.runway = list(self.parseData(runway_data))
         self.modcloth = list(self.parseData(modcloth_data))
         self.data = self.cleaner(self.runway)
+        self.data = self.getData()
+        self.data['bust_cat'] = self.data['bust'].apply(self.bust_category)
+        self.data['cup_cat'] = self.data['cup'].apply(self.cup_category)
     
     def parseData(self, fname):
         '''
@@ -71,7 +74,138 @@ class fashionCleaner:
             
         return data
     
+    def bust_category(self, bust):
+        #encodes bust size into classes 1-10
+        if bust == 28:
+            return 0
+        elif bust == 30:
+            return 1
+        elif bust == 32:
+            return 2
+        elif bust == 34:
+            return 3
+        elif bust == 36:
+            return 4
+        elif bust == 38:
+            return 5
+        elif bust == 40:
+            return 6
+        elif bust == 42:
+            return 7
+        elif bust == 44:
+            return 8
+        elif bust == 46:
+            return 9
+        else:
+            return 10
+    
+    def cup_category(self, cup):
+         #encodes cup size into classes 1-12
+        if cup == "aa":
+            return 0
+        elif cup == "a":
+            return 1
+        elif cup == "b":
+            return 2
+        elif cup == "c":
+            return 3
+        elif cup == "d":
+            return 4
+        elif cup == "d+":
+            return 5
+        elif cup == "dd":
+            return 6
+        elif cup == "ddd/e":
+            return 7
+        elif cup == "f":
+            return 8
+        elif cup == "g":
+            return 9
+        elif cup == "h":
+            return 10
+        elif cup == "i":
+            return 11
+        else:
+            return 12
+    
     def getData(self):
         return pd.DataFrame(self.data)
-
+    
+    
+class predictionConverter:
+    '''
+    Help us convert our labels in our predictions as well as conduct predictions
+    '''
+    cup = []
+    bust = []
+    busts = []
+    
+    def __init__(self, cup, bust):
+        self.cup = [self.convertCup(c) for c in cup]
+        self.bust = [self.convertBust(b) for b in bust]
         
+    def convertCup(self, cup):
+        if cup == 0:
+            return "aa"
+        elif cup == 1:
+            return "a"
+        elif cup == 2:
+            return "b"
+        elif cup == 3:
+            return "c"
+        elif cup == 4:
+            return "d"
+        elif cup == 5:
+            return "d+"
+        elif cup == 6:
+            return "dd"
+        elif cup == 7:
+            return "ddd/e"
+        elif cup == 8:
+            return "f"
+        elif cup == 9:
+            return "g"
+        elif cup == 10:
+            return "h"
+        elif cup == 11:
+            return "i"
+        elif cup == 12:
+            return "j"
+    
+    def convertBust(self, bust):
+        if bust == 0:
+            return 28
+        elif bust == 1:
+            return 30
+        elif bust == 2:
+            return 32
+        elif bust == 3:
+            return 34
+        elif bust == 4:
+            return 36
+        elif bust == 5:
+            return 38
+        elif bust == 6:
+            return 40
+        elif bust == 7:
+            return 42
+        elif bust == 8:
+            return 44
+        elif bust == 9:
+            return 46
+        elif bust == 10:
+            return 48
+    def getBust(self):
+        return self.bust
+    
+    def getCup(self):
+        return self.cup
+    
+    def bustCombiner(self):
+        busts = []
+        for b, c in zip(self.getBust(), self.getCup()):
+            bc = str(b) + str(c)
+            busts.append(bc)
+            
+        self.busts = busts
+        return busts
