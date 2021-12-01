@@ -5,6 +5,8 @@ import math
 import string
 import regex as re
 from dateutil.parser import parse
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 class fashionCleaner:
     '''
@@ -36,7 +38,6 @@ class fashionCleaner:
                 yield eval(l)
             except NameError:
                 total += 1
-                print(f"Scrapping Data, Null Entry: {total}")
     
     def bustSplitter(self, s):
         '''
@@ -130,8 +131,72 @@ class fashionCleaner:
     
     def getData(self):
         return pd.DataFrame(self.data)
+
+class genViz:
     
+    data = pd.DataFrame()
     
+    def __init__(self, data):
+        self.data = data
+    
+    def genHeightWeight(self, height = True, weight = True):   
+        if height and weight:
+            fig, axes = plt.subplots(ncols = 2, figsize = (16, 4))
+            sns.countplot(data = self.data, x = 'height', ax = axes[0])
+            sns.kdeplot(data = self.data, x = 'weight', ax = axes[1])
+            return fig, axes
+        elif height:
+            sns.countplot(data = self.data, x = 'height')
+        elif weight:
+            sns.kdeplot(data = self.data, x = 'weight')
+        
+        
+    def genAgeRating(self, age = True, rating = True):
+        if age and rating:
+            fig, axes = plt.subplots(ncols = 2, figsize = (16, 4))
+            sns.kdeplot(data = self.data, x = 'age', ax = axes[0])
+            sns.countplot(data = self.data, x = 'rating', ax = axes[1])
+            return fig, axes
+        elif age:
+            sns.kdeplot(data = self.data, x = 'age')
+        elif rating:
+            sns.countplot(data = self.data, x = 'rating') 
+    
+    def genSizeFit(self, size = True, Fit = True):
+        if size and fit:
+            fig, axes = plt.subplots(ncols = 2, figsize = (16, 4))
+            sns.kdeplot(data = self.data, x = 'size', ax = axes[0])
+            sns.countplot(data = self.data, x = 'fit', ax = axes[1])
+            return fig, axes
+        elif size:
+            sns.kdeplot(data = self.data, x = 'size')
+        elif fit:
+            sns.countplot(data = self.data, x = 'fit')
+            
+    def genBodyType(self):
+        fig, axes = plt.subplots(ncols = 1, figsize = (16, 8))
+        sns.countplot(data = self.data, x = 'body type', ax = axes)
+        return fig, axes
+    
+    def genBustCup(self, bust = True, cup = True):
+        if bust and cup:
+            fig, axes = plt.subplots(ncols = 2, figsize = (16, 4))
+            sns.countplot(data = self.data, x = 'cup', ax = axes[0])
+            sns.countplot(data = self.data, x = 'bust', ax = axes[1])
+            return fig, axes
+        elif bust:
+            sns.countplot(data = self.data, x = 'bust')
+        elif cup:
+            sns.countplot(data = self.data, x = 'cup')
+    
+    def genTrends(self):
+        fig, axes = plt.subplots(ncols = 4, figsize = (16, 4))
+        sns.regplot(data = self.data, x = 'weight', y = 'bust', ax = axes[0])
+        sns.regplot(data = self.data, x = 'height', y = 'bust', ax = axes[1])
+        sns.regplot(data = self.data, x = 'size', y = 'bust', ax = axes[2])
+        sns.regplot(data = self.data, x = 'rating', y = 'bust', ax = axes[3])
+        return fig, axes
+        
 class predictionConverter:
     '''
     Help us convert our labels in our predictions as well as conduct predictions
